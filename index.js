@@ -1,8 +1,9 @@
 const sgMail = require('@sendgrid/mail');
 const { exit } = require('process');
+const fs = require('fs');
 require('dotenv').config();
 
-const templateEmail = require('fs').readFileSync('template.html').toString('utf-8');
+const templateEmail = fs.readFileSync('template.html').toString('utf-8');
 
 sgMail.setApiKey(process.env.SENDGRID_KEY);
 
@@ -32,7 +33,7 @@ function sendEmail(to, personName, secretFriend) {
 
 let pessoas = [{
     name: 'Sonia',
-    email: 'ssqueiros@gmail.com',
+    email: 'ssequeiros23@gmail.com',
 },
 {
     name: 'Stela',
@@ -76,11 +77,11 @@ let pessoas = [{
 },
 {
     name: 'Joao',
-    email: 'joao.esteves1712@gmail.com',
+    email: 'stela.cuba@hotmail.com',
 },
 {
     name: 'Joana',
-    email: 'joanaa-esteves@hotmail.com',
+    email: 'joanaescar@hotmail.com',
 }]
 
 let amigos = [].concat(pessoas);
@@ -95,6 +96,14 @@ for (let i = 0; i < pessoas.length; i++) {
         exit(-1);
     }
 }
+
+const writeStream = fs.createWriteStream("AmigoSecretos.txt");
+
+for (let i = 0; i < pessoas.length; i++) {
+    writeStream.write(`${pessoas[i].name} - ${amigos[i].name}\n`);
+}
+
+writeStream.end();
 
 for (let i = 0; i < pessoas.length; i++) {
     sendEmail(pessoas[i].email, pessoas[i].name, amigos[i].name)
